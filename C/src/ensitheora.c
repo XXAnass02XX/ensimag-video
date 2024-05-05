@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <assert.h>
 #include <stdbool.h>
-
+#include <pthread.h>
 int windowsx = 0;
 int windowsy = 0;
 
@@ -54,11 +54,11 @@ void *draw2SDL(void *arg) {
 
   // ADD Your code HERE
   /* Protéger l'accès à la hashmap */
-
+  pthread_mutex_lock(&mutexStreamState);
   HASH_FIND_INT(theorastrstate, &serial, s);
 
   // END of your modification HERE
-
+  pthread_mutex_unlock(&mutexStreamState);
   assert(s->strtype == TYPE_THEORA);
 
   while (!fini) {

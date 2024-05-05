@@ -4,6 +4,8 @@
 #include "synchro.h"
 #include <assert.h>
 #include <time.h>
+#include <pthread.h>
+#include "ensivideo.h"
 
 bool fini = false;
 
@@ -65,7 +67,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
 
     // ADD Your code HERE
     // proteger l'accès à la hashmap
-
+    pthread_mutex_lock(&mutexStreamState);
     if (type == TYPE_THEORA)
       HASH_ADD_INT(theorastrstate, serial, s);
     else
@@ -80,6 +82,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
       HASH_FIND_INT(vorbisstrstate, &serial, s);
 
     // END of your code modification HERE
+    pthread_mutex_unlock(&mutexStreamState);
     assert(s != NULL);
   }
   assert(s != NULL);
@@ -138,6 +141,9 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
 	// BEGIN your modification HERE
         // lancement du thread gérant l'affichage (draw2SDL)
         // inserer votre code ici !!
+        pthread_t draw2SDLThread;
+        pthread_create(&draw2SDLThread, NULL, draw2SDL, &s->serial);
+        pthread_join(draw2SDLThread, NULL);
         // END of your modification
         assert(res == 0);
       }
