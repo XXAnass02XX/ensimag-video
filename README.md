@@ -1,10 +1,6 @@
 # Base for a multi-threaded video player #
 
-## C and C++ flavors ##
-
-Two versions are available in C and C++ directories
-1. C using POSIX Threads (Pthreads) or C threads version
-2. C++ using C++ threads version
+C using POSIX Threads (Pthreads) or C threads version
 
 ## References ##
 
